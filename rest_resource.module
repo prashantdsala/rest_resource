@@ -35,3 +35,13 @@ function rest_resource_site_information_handler($form, &$form_state)
   \Drupal::messenger()->addMessage(t('Site API Key has been saved
   with the value @site_api_key.', ['@site_api_key' => $site_api_key]));
 }
+
+/**
+ * Implements hook_uninstall().
+ */
+function rest_resource_uninstall(){
+  // Clear the siteapikey value from system.site config.
+  $configuration = \Drupal::configFactory()->getEditable('system.site');
+  $configuration->clear('siteapikey');
+  $configuration->save();
+}
