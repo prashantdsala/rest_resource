@@ -40,11 +40,11 @@ class RestResourceController extends  ControllerBase {
    * @return $response - JSON
   */
   public function get($site_api_key, NodeInterface $node) {
-    
+  
     $configuration_api_key = $this->configFactory->getEditable('system.site')->get('siteapikey');
     
     // Return JSON response for page content type and site api key matches.
-    if ($node->getType() == 'page' && $configuration_api_key == $site_api_key) {
+    if ($node->getType() == 'page' && $configuration_api_key != 'No API Key yet' && $configuration_api_key == $site_api_key) {
       $response = $node->toArray();
       $status = 200;
     }

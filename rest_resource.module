@@ -15,7 +15,7 @@ function rest_resource_form_system_site_information_settings_alter(&$form, FormS
     '#type' => 'textfield',
     '#title' => t('Site API Key'),
     '#description' => t('API key for the REST resource.'),
-    '#default_value' => $configuration->get('siteapikey'),
+    '#default_value' => $configuration->get('siteapikey') ?? 'No API Key yet',
     '#required' => TRUE,
   ];
   
