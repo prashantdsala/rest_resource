@@ -1,0 +1,37 @@
+<?php
+
+use \Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function rest_resource_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  // Get system.site configuration.
+  $configuration = \Drupal::config('system.site');
+  
+  // Add a new text field to the Form.
+  $form['site_information']['siteapikey'] = [
+    '#type' => 'textfield',
+    '#title' => t('Site API Key'),
+    '#description' => t('API key for the REST resource.'),
+    '#default_value' => $configuration->get('siteapikey'),
+    '#required' => TRUE,
+  ];
+  
+  // Rename submit button.
+  $form['actions']['submit']['#value'] = t('Update Configuration');
+  // Custom submit handler.
+  $form['#submit'][] = 'rest_resource_site_information_handler';
+}
+
+// Custom submit handler for site information form.
+function rest_resource_site_information_handler($form, &$form_state)
+{
+  $site_api_key = $form_state->getValue(['siteapikey']);
+  $configuration = \Drupal::configFactory()->getEditable('system.site');
+  $configuration->set('siteapikey', $site_api_key);
+  $configuration->save();
+  \Drupal::messenger()->addMessage(t('Site API Key has been saved
+  with the value @site_api_key.', ['@site_api_key' => $site_api_key]));
+}
